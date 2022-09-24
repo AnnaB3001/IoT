@@ -1,0 +1,31 @@
+#include <LiquidCrystal_I2C.h> 
+#include "DHT.h" // Подключаем библиотеку DHT 
+
+#define DHTPIN 2 // Пин к которому подключен датчик 
+#define DHTTYPE DHT22 // Используемый датчик DHT 22 
+DHT dht(DHTPIN, DHTTYPE); // Инициализируем датчик 
+LiquidCrystal_I2C lcd(0x27,20,4); // устанавливаем для дисплея адресс до 0x27 и для 16 знаков, а также 2 линии экрана 
+
+void setup() 
+{ 
+	lcd.init(); 
+	dht.begin();
+} 
+
+void loop() 
+{ 
+	float h = dht.readHumidity(); // Считывание влажности в процентах 
+	float t = dht.readTemperature(); // Считывание температуры в градусах цельсия 
+	float hic = dht.computeHeatIndex(t, h, false);// Расчет тепла по целсию 
+	lcd.print("Humidity: "); // Выводим текст 
+	lcd.print(h); // Отображаем влажность 
+	lcd.print(" %\t"); // Выводим текст 
+	lcd.setCursor(0,2); 
+	lcd.print("Temp: "); // Выводим текст 
+	lcd.print(t); // Отображаем температуру 
+	lcd.print(" *C "); // Выводим текст 
+	delay(2000); 
+
+	lcd.clear();
+
+} 
